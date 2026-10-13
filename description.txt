@@ -1,0 +1,8 @@
+Elden Ring & D&D: Lands Between
+=================================
+A Terraria mod inspired by Elden Ring and Dungeons & Dragons.
+Features:
+- Fixed NPC locations across the Lands Between map.
+- Invulnerable friendly NPCs (Souls-like style).
+- Replaces standard world generation with bespoke Souls-themed biomes & dungeons.
+- Custom weapons, magic and attributes using vanilla animations and sprites.

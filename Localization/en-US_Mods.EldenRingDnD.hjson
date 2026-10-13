@@ -1,0 +1,15 @@
+Mods: {
+	EldenRingDnD: {
+		Items: {
+			DarkMoonGreatsword: {
+				DisplayName: Dark Moon Greatsword
+				Tooltip:
+					'''
+					A legendary royal greatsword imbued with cold lunar sorcery.
+					Consumes FP (mana) to unleash sweeping waves of frost moonlight.
+					[Elden Ring x D&D Equipment]
+					'''
+			}
+		}
+	}
+}

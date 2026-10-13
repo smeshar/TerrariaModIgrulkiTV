@@ -1,0 +1,8 @@
+displayName = Elden Ring & D&D: Lands Between
+author = YourName
+version = 0.1.0.0
+homepage = 
+hideCode = false
+hideResources = false
+includeSource = true
+side = Both
