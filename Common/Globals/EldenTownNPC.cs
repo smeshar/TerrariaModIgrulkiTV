@@ -18,16 +18,6 @@ namespace EldenRingDnD.Common.Globals
 		// Запоминаем исходные координаты, если нужно зафиксировать NPC на посту
 		public Vector2? AnchorPosition { get; set; } = null;
 
-		/// <summary>
-		/// Полный запрет на автоматическое заселение жителей в свободные дома.
-		/// Возврат false отключает стандартный призыв жителей в дома.
-		/// </summary>
-		public override bool? CanTownNPCSpawn(int numTownNPCs)
-		{
-			// Ни один ванильный Town NPC не заселится самостоятельно
-			return false;
-		}
-
 		public override void SetDefaults(NPC npc)
 		{
 			if (npc.townNPC)
@@ -45,36 +35,41 @@ namespace EldenRingDnD.Common.Globals
 
 		/// <summary>
 		/// Дополнительная страховка: запрещаем мобам наносить удары по Town NPC.
+		/// Возвращаем bool?: false = запрет удара, null = стандартное поведение.
 		/// </summary>
-		public override bool CanBeHitByNPC(NPC npc, NPC attacker)
+		public override bool? CanBeHitByNPC(NPC npc, NPC attacker)
 		{
 			if (npc.townNPC)
 			{
 				return false;
 			}
-			return base.CanBeHitByNPC(npc, attacker);
+			return null;
 		}
 
 		/// <summary>
 		/// Запрещаем снарядам наносить удары по Town NPC.
+		/// Возвращаем bool?: false = запрет попадания, null = стандартное поведение.
 		/// </summary>
-		public override bool CanBeHitByProjectile(NPC npc, Projectile projectile)
+		public override bool? CanBeHitByProjectile(NPC npc, Projectile projectile)
 		{
 			if (npc.townNPC)
 			{
 				return false;
 			}
-			return base.CanBeHitByProjectile(npc, projectile);
+			return null;
 		}
 
 		/// <summary>
-		/// Обнуление любого входящего урона (если урон просочился в обход dontTakeDamage).
+		/// Обнуление любого входящего урона (если урон каким-то образом просочился).
 		/// </summary>
 		public override void ModifyIncomingHit(NPC npc, ref NPC.HitModifiers modifiers)
 		{
 			if (npc.townNPC)
 			{
-				modifiers.Nullify();
+				modifiers.SourceDamage *= 0f;
+				modifiers.FinalDamage *= 0f;
+				modifiers.Knockback *= 0f;
+				modifiers.DisableCrit();
 			}
 		}
 

@@ -52,8 +52,24 @@ namespace EldenRingDnD.Common.Systems
 			new NPCPositionConfig(NPCID.ArmsDealer, 400, 290, "Blacksmith Ruins / Кузница"),
 
 			// 5. Деметр / Трактирщик (Таверна D&D / Башня магов)
-			new NPCPositionConfig(NPCID.Tavernkeep, 500, 310, "Wayward Inn / Постоялый двор")
+			new NPCPositionConfig(NPCID.DD2Bartender, 500, 310, "Wayward Inn / Постоялый двор")
 		};
+
+		/// <summary>
+		/// Предотвращает естественный спавн городских жителей в построенные дома.
+		/// Только зафиксированные на карте NPC будут присутствовать в мире.
+		/// </summary>
+		public override void PostUpdateTime()
+		{
+			WorldGen.prioritizedTownNPCType = 0;
+			if (Main.townNPCCanSpawn != null)
+			{
+				for (int i = 0; i < Main.townNPCCanSpawn.Length; i++)
+				{
+					Main.townNPCCanSpawn[i] = false;
+				}
+			}
+		}
 
 		public override void OnWorldLoad()
 		{

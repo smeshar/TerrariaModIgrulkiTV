@@ -5,6 +5,7 @@ using Terraria.ID;
 using Terraria.IO;
 using Terraria.ModLoader;
 using Terraria.WorldBuilding;
+using Terraria.GameContent.Generation;
 
 namespace EldenRingDnD.Common.Systems
 {
