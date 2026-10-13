@@ -35,7 +35,6 @@ namespace EldenRingDnD.Common.Globals
 
 		/// <summary>
 		/// Дополнительная страховка: запрещаем мобам наносить удары по Town NPC.
-		/// Возвращаем bool?: false = запрет удара, null = стандартное поведение.
 		/// </summary>
 		public override bool CanBeHitByNPC(NPC npc, NPC attacker)
 		{
@@ -43,7 +42,7 @@ namespace EldenRingDnD.Common.Globals
 			{
 				return false;
 			}
-			return null;
+			return base.CanBeHitByNPC(npc, attacker);
 		}
 
 		/// <summary>
