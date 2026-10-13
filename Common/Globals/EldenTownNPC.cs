@@ -3,7 +3,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace EldenRingDnD.Common.Globals
+namespace TerrariaModIgrulkiTV.Common.Globals
 {
 	/// <summary>
 	/// Глобальный модификатор для всех NPC игры:

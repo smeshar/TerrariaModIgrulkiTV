@@ -7,7 +7,7 @@ using Terraria.ModLoader;
 using Terraria.WorldBuilding;
 using Terraria.GameContent.Generation;
 
-namespace EldenRingDnD.Common.Systems
+namespace TerrariaModIgrulkiTV.Common.Systems
 {
 	/// <summary>
 	/// Система генерации и настройки мира "Междуземье" (The Lands Between).

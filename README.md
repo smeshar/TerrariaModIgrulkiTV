@@ -32,21 +32,21 @@ tModLoader компилирует моды из папки `ModSources`:
 Чтобы проект лежал в текущей папке `d:\VSCodeProjects\TerrariaMod` и одновременно был виден в tModLoader, создайте символическую ссылку (запустите PowerShell от имени администратора):
 
 ```powershell
-New-Item -ItemType SymbolicLink -Path "$HOME\Documents\My Games\Terraria\tModLoader\ModSources\EldenRingDnD" -Target "d:\VSCodeProjects\TerrariaMod"
+New-Item -ItemType SymbolicLink -Path "$HOME\Documents\My Games\Terraria\tModLoader\ModSources\TerrariaModIgrulkiTV" -Target "d:\VSCodeProjects\TerrariaMod"
 ```
 
 После этого:
 1. Запустите **tModLoader**.
 2. Перейдите в меню **Разработка модов** (Workshop / Mod Sources).
-3. Нажмите **Собрать и перезагрузить** (Build + Reload) напротив `EldenRingDnD`.
+3. Нажмите **Собрать и перезагрузить** (Build + Reload) напротив `TerrariaModIgrulkiTV`.
 
 ---
 
 ## 3. Архитектура проекта
 
 - `build.txt` / `description.txt` — метаданные мода для загрузчика.
-- `EldenRingDnD.csproj` — файл проекта C# (.NET 8.0).
-- `EldenRingDnD.cs` — главный класс мода.
+- `TerrariaModIgrulkiTV.csproj` — файл проекта C# (.NET 8.0).
+- `TerrariaModIgrulkiTV.cs` — главный класс мода.
 - `Common/Globals/EldenTownNPC.cs`:
   - `CanTownNPCSpawn(...) => false` — запрет естественного заселения в дома.
   - `SetDefaults` / `CanBeHitByNPC` / `ModifyIncomingHit` / `CheckDead` — 100% неуязвимость и иммунитет ко всем видам урона.

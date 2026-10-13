@@ -1,11 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <Import Project="..\tModLoader.targets" Condition="Exists('..\tModLoader.targets')" />
   <PropertyGroup>
-    <AssemblyName>EldenRingDnD</AssemblyName>
+    <AssemblyName>TerrariaModIgrulkiTV</AssemblyName>
     <TargetFramework>net8.0</TargetFramework>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
-    <RootNamespace>EldenRingDnD</RootNamespace>
+    <RootNamespace>TerrariaModIgrulkiTV</RootNamespace>
   </PropertyGroup>
 </Project>

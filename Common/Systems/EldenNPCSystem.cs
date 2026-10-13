@@ -5,7 +5,7 @@ using Terraria.ID;
 using Terraria.ModLoader;
 using Terraria.ModLoader.IO;
 
-namespace EldenRingDnD.Common.Systems
+namespace TerrariaModIgrulkiTV.Common.Systems
 {
 	/// <summary>
 	/// Система расстановки ванильных NPC по фиксированным точкам карты (как в Elden Ring / D&D).

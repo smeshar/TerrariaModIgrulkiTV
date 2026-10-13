@@ -3,7 +3,7 @@ using Terraria;
 using Terraria.ID;
 using Terraria.ModLoader;
 
-namespace EldenRingDnD.Content.Items.Weapons
+namespace TerrariaModIgrulkiTV.Content.Items.Weapons
 {
 	/// <summary>
 	/// Двуручник Темной Луны (Dark Moon Greatsword / Elden Ring).
