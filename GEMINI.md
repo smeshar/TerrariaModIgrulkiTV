@@ -21,3 +21,41 @@
 - Challenge assumptions before acknowledging any merits.
 - Provide the strongest possible counterarguments.
 - Do not concede points easily; demand rigorous evidence and physical/mathematical proof.
+
+## 4. Workspace Architecture, Environment & Build Context
+
+### 4.1. Runtime Environment & Toolchain
+- **Engine**: Terraria 1.4.4+ via **tModLoader** (v2026.08+ / .NET 8.0).
+- **Target Framework**: `net8.0` (`TerrariaModIgrulkiTV.csproj`).
+- **Root Namespace & Mod Class**: `TerrariaModIgrulkiTV` (in `TerrariaModIgrulkiTV.cs`). All sub-namespaces must match folder hierarchy: `TerrariaModIgrulkiTV.<Path>`.
+- **Compilation Mechanism**: The mod is built solely through tModLoader's in-game interface: **Workshop -> Mod Sources -> Build + Reload** (`Собрать и перезагрузить`).
+- **CRITICAL RESTRICTION**: `dotnet` is **NOT** in the global PATH environment. **NEVER** run `dotnet build`, `where dotnet`, or execute recursive drive scans (`Get-ChildItem -Recurse C:\, D:\`) to look for compilers. Write the code and rely on tModLoader's native compilation pipeline.
+- **Linkage**: Workspace folder `d:\VSCodeProjects\TerrariaMod` is linked to tModLoader via symbolic link:
+  `$HOME\Documents\My Games\Terraria\tModLoader\ModSources\TerrariaModIgrulkiTV`.
+
+### 4.2. Repository Directory Map
+- `Common/Globals/` — Global entities and hooks (`EldenTownNPC.cs` for NPC invulnerability/anchoring).
+- `Common/Players/` — `ModPlayer` classes (`CalamityGaugePlayer.cs` for Adrenaline/Rage logic).
+- `Common/Systems/` — `ModSystem` classes:
+  - `WorldSystem.cs`: World generation passes (Lands Between biomes, Ruined Church, Cave Dungeon under spawn).
+  - `EldenNPCSystem.cs`: Fixed coordinate NPC spawner.
+  - `KeybindSystem.cs`: Keybind registration (`AdrenalineHotKey`, `RageHotKey`).
+- `Common/UI/` — `ModSystem` HUD rendering (`CalamityGaugesUI.cs` using `ModifyInterfaceLayers`).
+- `Content/Buffs/` — Custom buffs (`AdrenalineBuff.cs`, `RageBuff.cs`).
+- `Content/Items/` — Items organized by category:
+  - `Weapons/`: Custom weapons (`DarkMoonGreatsword.cs`).
+  - `Summoning/`: Boss summon items (`AncientCaveIdolSummon.cs`).
+- `Content/NPCs/Bosses/` — Bosses and enemies (`CaveIdol/CaveIdolBoss.cs`).
+- `Content/Projectiles/` — Custom projectiles (`Boss/FallingStalactite.cs`, `StoneShard.cs`).
+- `Content/UI/` — UI textures and gauge bars (`AdrenalineBar*.png`, `RageBar*.png`).
+- `Localization/` — HJSON files (`ru-RU_Mods.TerrariaModIgrulkiTV.hjson`, `en-US_Mods.TerrariaModIgrulkiTV.hjson`).
+- `ROADMAP.md` — Backlog and completed feature tracking.
+
+### 4.3. Asset Creation Protocol
+- Python 3.12 with **Pillow** (`PIL`) is installed and available.
+- When sprites (NPCs, items, projectiles, UI) are needed, generate RGBA transparent pixel-art PNGs via a temporary Python script writing directly to `Content/...`, then delete the script immediately.
+- Do not introduce placeholder strings or missing file dependencies.
+
+### 4.4. Localization Requirement
+- Whenever adding or altering Items, NPCs, Buffs, Projectiles, or Keybinds, update **both** `ru-RU` and `en-US` HJSON files in `Localization/` in the same step.
+
