@@ -1,5 +1,22 @@
 Mods: {
 	TerrariaModIgrulkiTV: {
+		Keybinds: {
+			Adrenaline.DisplayName: Adrenaline
+			Rage.DisplayName: Rage
+		}
+
+		Buffs: {
+			AdrenalineBuff: {
+				DisplayName: Adrenaline Mode
+				Description: Damage increased by 150%! You surge with electric power.
+			}
+
+			RageBuff: {
+				DisplayName: Rage Mode
+				Description: Damage increased by 35%, critical strike chance by 10%! You are engulfed in crimson fire.
+			}
+		}
+
 		Items: {
 			DarkMoonGreatsword: {
 				DisplayName: Dark Moon Greatsword
@@ -10,6 +27,24 @@ Mods: {
 					[Elden Ring x D&D Equipment]
 					'''
 			}
+
+			AncientCaveIdolSummon: {
+				DisplayName: Strange Stone Idol
+				Tooltip:
+					'''
+					An ancient carving of a cavern statue with faintly glowing amethyst eyes.
+					Summons the Ancient Cave Idol when used underground.
+					'''
+			}
+		}
+
+		NPCs: {
+			CaveIdolBoss.DisplayName: Ancient Cave Idol
+		}
+
+		Projectiles: {
+			FallingStalactite.DisplayName: Falling Stalactite
+			StoneShard.DisplayName: Amethyst Shard
 		}
 	}
 }

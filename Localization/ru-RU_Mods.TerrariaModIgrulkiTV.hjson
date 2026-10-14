@@ -1,5 +1,22 @@
 Mods: {
 	TerrariaModIgrulkiTV: {
+		Keybinds: {
+			Adrenaline.DisplayName: Адреналин
+			Rage.DisplayName: Ярость
+		}
+
+		Buffs: {
+			AdrenalineBuff: {
+				DisplayName: Режим Адреналина
+				Description: Урон увеличен на 150%! Вы излучаете электрическую энергию.
+			}
+
+			RageBuff: {
+				DisplayName: Режим Ярости
+				Description: Урон увеличен на 35%, шанс крита на 10%! Вы объяты багровым пламенем.
+			}
+		}
+
 		Items: {
 			DarkMoonGreatsword: {
 				DisplayName: Двуручник Тёмной Луны
@@ -10,6 +27,24 @@ Mods: {
 					[Снаряжение Elden Ring x D&D]
 					'''
 			}
+
+			AncientCaveIdolSummon: {
+				DisplayName: Странный каменный идол
+				Tooltip:
+					'''
+					Древний обломок пещерной статуи с мерцающими аметистовыми глазами.
+					Призывает Каменного Идола Подземелья в подземных слоях мира.
+					'''
+			}
+		}
+
+		NPCs: {
+			CaveIdolBoss.DisplayName: Каменный Идол Подземелья
+		}
+
+		Projectiles: {
+			FallingStalactite.DisplayName: Падающий сталактит
+			StoneShard.DisplayName: Аметистовый осколок
 		}
 	}
 }

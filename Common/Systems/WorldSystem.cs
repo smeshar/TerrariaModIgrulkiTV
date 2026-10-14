@@ -1,11 +1,14 @@
+using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Terraria;
+using Terraria.DataStructures;
 using Terraria.ID;
 using Terraria.IO;
 using Terraria.ModLoader;
 using Terraria.WorldBuilding;
 using Terraria.GameContent.Generation;
+using TerrariaModIgrulkiTV.Content.NPCs.Bosses.CaveIdol;
 
 namespace TerrariaModIgrulkiTV.Common.Systems
 {
@@ -56,11 +59,6 @@ namespace TerrariaModIgrulkiTV.Common.Systems
 
 		/// <summary>
 		/// Генерация базовой структуры биомов Elden Ring (по горизонтальным зонам карты).
-		/// Карта делится на узнаваемые регионы:
-		/// - Запад: Озерная Лиурния (вода, синий кирпич, мрамор)
-		/// - Центр: Замогилье (зеленые холмы, серый камень, руины)
-		/// - Восток: Звездные пустоши / Кэлид (багровые блоки, плоть, пепел, кости)
-		/// - Север: Плато Альтус и Вершины Великанов (золотой песчаник, снег и лед)
 		/// </summary>
 		private void GenerateLandsBetweenBiomes(GenerationProgress progress, GameConfiguration configuration)
 		{
@@ -69,29 +67,23 @@ namespace TerrariaModIgrulkiTV.Common.Systems
 			int worldWidth = Main.maxTilesX;
 			int worldHeight = Main.maxTilesY;
 
-			// Определение границ биомов по ширине (в процентах от размера мира)
 			int liurniaEnd = (int)(worldWidth * 0.30f);
 			int limgraveEnd = (int)(worldWidth * 0.70f);
-			// Оставшаяся правая часть (70% - 100%) — Кэлид / Звездные пустоши
 
 			for (int x = 0; x < worldWidth; x++)
 			{
 				progress.Set((float)x / worldWidth);
 
-				// Поверхностная высота
 				int surfaceY = (int)Main.worldSurface;
 
-				// 1. Зона Кэлида (Восточная треть карты) — Багровые земли, Гниль
 				if (x >= limgraveEnd)
 				{
 					ApplyCaelidStyle(x, surfaceY);
 				}
-				// 2. Зона Лиурнии (Западная треть карты) — Затопленные низины
 				else if (x < liurniaEnd)
 				{
 					ApplyLiurniaStyle(x, surfaceY);
 				}
-				// 3. Зона Замогилья (Центр) — Равнины и руины
 				else
 				{
 					ApplyLimgraveStyle(x, surfaceY);
@@ -145,7 +137,7 @@ namespace TerrariaModIgrulkiTV.Common.Systems
 		}
 
 		/// <summary>
-		/// Генерация тематических мини-данжей Elden Ring (Катакомбы, Руины церквей, Лагеря).
+		/// Генерация тематических мини-данжей Elden Ring (Катакомбы, Руины церквей, Лагеря, Пещерный данж).
 		/// </summary>
 		private void GenerateThematicDungeons(GenerationProgress progress, GameConfiguration configuration)
 		{
@@ -154,12 +146,16 @@ namespace TerrariaModIgrulkiTV.Common.Systems
 			// Размещение стартовой церкви (аналог Церкви Эллех) около стартовой точки игрока
 			int churchX = Main.spawnTileX + 30;
 			int churchY = (int)Main.worldSurface - 2;
-
 			BuildRuinedChurch(churchX, churchY);
+
+			// Размещение пещерного данжа первого босса прямо под точкой спавна игроков
+			int caveDungeonX = Main.spawnTileX;
+			int caveDungeonY = (int)Main.worldSurface + 65;
+			BuildCaveIdolDungeon(caveDungeonX, caveDungeonY);
 		}
 
 		/// <summary>
-		/// Пример генератора структуры: Разрушенная церковь (каменный кирпич, костер, платформы).
+		/// Генератор структуры: Разрушенная церковь (каменный кирпич, костер, платформы).
 		/// </summary>
 		public static void BuildRuinedChurch(int startX, int startY)
 		{
@@ -170,20 +166,16 @@ namespace TerrariaModIgrulkiTV.Common.Systems
 			{
 				for (int y = startY; y < startY + height; y++)
 				{
-					// Очищаем внутреннее пространство
 					WorldGen.KillTile(x, y);
 
-					// Пол церкви из серого кирпича
 					if (y == startY + height - 1)
 					{
 						WorldGen.PlaceTile(x, y, TileID.GrayBrick, mute: true, forced: true);
 					}
-					// Стены здания (с разрушенными арками)
 					else if ((x == startX || x == startX + width - 1) && y > startY + 3)
 					{
 						WorldGen.PlaceTile(x, y, TileID.GrayBrick, mute: true, forced: true);
 					}
-					// Фоновые каменные стены
 					else
 					{
 						WorldGen.PlaceWall(x, y, WallID.GrayBrick);
@@ -191,10 +183,167 @@ namespace TerrariaModIgrulkiTV.Common.Systems
 				}
 			}
 
-			// Размещаем костер (Место благодати / Campfire) в центре церкви
 			int fireX = startX + width / 2;
 			int fireY = startY + height - 2;
 			WorldGen.PlaceTile(fireX, fireY, TileID.Campfire, mute: true, forced: true);
+		}
+
+		/// <summary>
+		/// Генерация пещерного данжа для первого босса («Каменный Идол Подземелья»).
+		/// Располагается прямо под стартовой точкой спавна игроков в подземном слое.
+		/// Содержит следы древней человеческой стоянки: обветшалые деревянные стены, платформы, потухшие костры, паутину, сундук.
+		/// В центре на каменном пьедестале установлена спящая статуя босса.
+		/// </summary>
+		public static void BuildCaveIdolDungeon(int centerX, int centerY)
+		{
+			int radiusX = 26;
+			int radiusY = 13;
+
+			// 1. Формирование органической пещерной каверны
+			for (int x = centerX - radiusX - 3; x <= centerX + radiusX + 3; x++)
+			{
+				for (int y = centerY - radiusY - 3; y <= centerY + radiusY + 3; y++)
+				{
+					if (x <= 5 || x >= Main.maxTilesX - 5 || y <= 5 || y >= Main.maxTilesY - 5)
+						continue;
+
+					float dx = (x - centerX) / (float)radiusX;
+					float dy = (y - centerY) / (float)radiusY;
+					float distSq = dx * dx + dy * dy;
+
+					// Внутренняя область пещеры (очистка)
+					if (distSq <= 0.88f)
+					{
+						WorldGen.KillTile(x, y, noItem: true);
+
+						// Задние стены: следы деревянного жилища людей в центре и каменная кладка/пещера
+						if (Math.Abs(x - centerX) < 14 && Math.Abs(y - centerY) < 9)
+						{
+							WorldGen.PlaceWall(x, y, WallID.Wood);
+						}
+						else
+						{
+							WorldGen.PlaceWall(x, y, WallID.Cave6Unsafe);
+						}
+					}
+					// Каменная окантовка свода и пола пещеры
+					else if (distSq <= 1.08f)
+					{
+						Tile tile = Main.tile[x, y];
+						if (!tile.HasTile)
+						{
+							WorldGen.PlaceTile(x, y, TileID.Stone, mute: true, forced: true);
+						}
+					}
+				}
+			}
+
+			// 2. Декоративные элементы стоянки людей
+			int floorY = centerY + radiusY - 2;
+
+			// Разрушенные деревянные балки (опоры)
+			for (int bx = centerX - 12; bx <= centerX + 12; bx += 8)
+			{
+				for (int by = centerY - 5; by <= floorY; by++)
+				{
+					if (!Main.tile[bx, by].HasTile && WorldGen.genRand.NextBool(3, 4))
+					{
+						WorldGen.PlaceTile(bx, by, TileID.WoodenBeam, mute: true, forced: true);
+					}
+				}
+			}
+
+			// Разрушенные деревянные платформы
+			for (int px = centerX - 18; px <= centerX - 6; px++)
+			{
+				if (WorldGen.genRand.NextBool(4, 5))
+				{
+					WorldGen.PlaceTile(px, centerY + 2, TileID.Platforms, mute: true, forced: true, style: 0);
+				}
+			}
+			for (int px = centerX + 6; px <= centerX + 18; px++)
+			{
+				if (WorldGen.genRand.NextBool(4, 5))
+				{
+					WorldGen.PlaceTile(px, centerY + 2, TileID.Platforms, mute: true, forced: true, style: 0);
+				}
+			}
+
+			// Потухшие костры (Campfire, потушенные переключением кадра тайла)
+			int fire1X = centerX - 9;
+			int fire1Y = floorY - 1;
+			WorldGen.PlaceTile(fire1X, fire1Y, TileID.Campfire, mute: true, forced: true);
+			if (Main.tile[fire1X, fire1Y].HasTile && Main.tile[fire1X, fire1Y].TileType == TileID.Campfire)
+			{
+				Main.tile[fire1X, fire1Y].TileFrameX += 18;
+				Main.tile[fire1X + 1, fire1Y].TileFrameX += 18;
+				Main.tile[fire1X, fire1Y + 1].TileFrameX += 18;
+				Main.tile[fire1X + 1, fire1Y + 1].TileFrameX += 18;
+			}
+
+			int fire2X = centerX + 10;
+			int fire2Y = floorY - 1;
+			WorldGen.PlaceTile(fire2X, fire2Y, TileID.Campfire, mute: true, forced: true);
+			if (Main.tile[fire2X, fire2Y].HasTile && Main.tile[fire2X, fire2Y].TileType == TileID.Campfire)
+			{
+				Main.tile[fire2X, fire2Y].TileFrameX += 18;
+				Main.tile[fire2X + 1, fire2Y].TileFrameX += 18;
+				Main.tile[fire2X, fire2Y + 1].TileFrameX += 18;
+				Main.tile[fire2X + 1, fire2Y + 1].TileFrameX += 18;
+			}
+
+			// Паутина на сводах пещеры
+			for (int wx = centerX - radiusX + 3; wx <= centerX + radiusX - 3; wx++)
+			{
+				int ceilingY = centerY - radiusY + 3;
+				if (!Main.tile[wx, ceilingY].HasTile && WorldGen.genRand.NextBool(3))
+				{
+					WorldGen.PlaceTile(wx, ceilingY, TileID.Cobweb, mute: true, forced: true);
+				}
+			}
+
+			// Старый заброшенный верстак
+			WorldGen.PlaceTile(centerX - 14, floorY - 1, TileID.WorkBenches, mute: true, forced: true);
+
+			// Заброшенный сундук с базовым подземным лутом
+			int chestX = centerX + 14;
+			int chestY = floorY - 1;
+			int chestIndex = WorldGen.PlaceChest(chestX, chestY, TileID.Containers, style: 1);
+			if (chestIndex != -1)
+			{
+				Chest chest = Main.chest[chestIndex];
+				int itemSlot = 0;
+				chest.item[itemSlot++].SetDefaults(ItemID.Rope, false);
+				chest.item[itemSlot - 1].stack = 40;
+				chest.item[itemSlot++].SetDefaults(ItemID.Torch, false);
+				chest.item[itemSlot - 1].stack = 25;
+				chest.item[itemSlot++].SetDefaults(ItemID.LesserHealingPotion, false);
+				chest.item[itemSlot - 1].stack = 5;
+				chest.item[itemSlot++].SetDefaults(ItemID.Bomb, false);
+				chest.item[itemSlot - 1].stack = 6;
+			}
+
+			// 3. Центральный каменный постамент для босса-статуи
+			for (int px = centerX - 3; px <= centerX + 3; px++)
+			{
+				WorldGen.PlaceTile(px, floorY, TileID.GrayBrick, mute: true, forced: true);
+				WorldGen.PlaceTile(px, floorY - 1, TileID.GrayBrick, mute: true, forced: true);
+			}
+
+			// 4. Размещение спящего босса-статуи в центре пьедестала
+			int bossType = ModContent.NPCType<CaveIdolBoss>();
+			int bossIndex = NPC.NewNPC(
+				new EntitySource_WorldGen(),
+				centerX * 16 + 8,
+				(floorY - 4) * 16,
+				bossType
+			);
+
+			if (bossIndex < Main.maxNPCs)
+			{
+				Main.npc[bossIndex].ai[0] = 0f; // Состояние неподвижной статуи
+				Main.npc[bossIndex].netUpdate = true;
+			}
 		}
 	}
 }
